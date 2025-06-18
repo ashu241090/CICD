@@ -17,7 +17,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '4.5'
+          dotnet-version: '4.0'
 
       - name: Restore dependencies
         run: dotnet restore
@@ -31,25 +31,9 @@ jobs:
           dotnet publish -c Release -o publish
           echo "path=publish" >> $GITHUB_OUTPUT
 
-  deploy-staging:
-    runs-on: windows-latest
-    needs: build
-    environment: staging
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Deploy to Staging IIS via Web Deploy
-        shell: pwsh
-        run: |
-          "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync `
-          -source:contentPath="publish" `
-          -dest:contentPath="Default Web Site/CICD",computerName="${{ secrets.DEPLOY_URL }}",userName="${{ secrets.DEPLOY_USER }}",password="${{ secrets.DEPLOY_PASSWORD }}",authType="Basic" `
-          -allowUntrusted=true
-
   deploy-production:
     runs-on: windows-latest
-    needs: deploy-staging
+    needs: build
     environment:
       name: production
       url: https://your-prod-site.com  # Optional
