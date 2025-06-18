@@ -1,48 +1,40 @@
-name: CI/CD for .NET to IIS (Staging → Production)
+name: Build and Publish ASP.NET (.NET Framework 4.7.2)
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
   build:
+    name: Build & Publish
     runs-on: windows-latest
-    outputs:
-      build-path: ${{ steps.publish.outputs.path }}
+
+    env:
+      Solution_Name: GITHUB-CICD.sln
+      Project_Path: CICD/GITHUB-CICD.csproj
+      Publish_Dir: $(Build.ArtifactStagingDirectory)/publish
+
     steps:
-    
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.3.1
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1
 
-      
+    - name: Restore NuGet packages
+      run: nuget restore ${{ env.GITHUB-CICD }}
 
-      - name: Build with MSBuild
-        run: msbuild GITHUB-CICD.csproj 
+    - name: Build with MSBuild
+      run: |
+        msbuild ${{ env.Project_Path }} `
+          /p:Configuration=Release `
+          /p:TargetFrameworkVersion=v4.7.2 `
+          /p:DeployOnBuild=true `
+          /p:WebPublishMethod=FileSystem `
+          /p:PublishDir="${{ github.workspace }}\publish"
 
-      - name: Publish project
-        id: publish
-        run: |
-          dotnet publish -c Release -o publish
-          echo "path=publish" >> $GITHUB_OUTPUT
-
-  deploy-production:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: production
-      url: https://your-prod-site.com  # Optional
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Deploy to Production IIS via Web Deploy
-        shell: pwsh
-        run: |
-          "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync `
-          -source:contentPath="publish" `
-          -dest:contentPath="Default Web Site/CICD",computerName="${{ secrets.DEPLOY_URL }}",userName="${{ secrets.DEPLOY_USER }}",password="${{ secrets.DEPLOY_PASSWORD }}",authType="Basic" `
-          -allowUntrusted=true
+    - name: Upload publish artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: webapp
+        path: ${{ github.workspace }}\publish
