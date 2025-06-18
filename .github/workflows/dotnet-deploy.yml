@@ -11,18 +11,15 @@ jobs:
     outputs:
       build-path: ${{ steps.publish.outputs.path }}
     steps:
+    
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.301'
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3.1
 
-      
-
-      - name: Build solution
-        run: msbuild GITHUB-CICD.csproj --configuration Release
+      - name: Build web application
+        run: msbuild GITHUB-CICD.csproj /p:Configuration=Release
 
       - name: Publish project
         id: publish
