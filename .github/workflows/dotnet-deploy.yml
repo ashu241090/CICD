@@ -18,11 +18,10 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Restore NuGet packages
-        run: nuget restore GITHUB-CICD.csproj
+      
 
       - name: Build with MSBuild
-        run: msbuild GITHUB-CICD.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile /p:WebPublishMethod=FileSystem /p:PublishDir="$(Build.SourcesDirectory)\publish"
+        run: msbuild GITHUB-CICD.csproj 
 
       - name: Publish project
         id: publish
