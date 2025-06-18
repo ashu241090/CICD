@@ -22,7 +22,7 @@ jobs:
       
 
       - name: Build solution
-        run: dotnet build GITHUB-CICD.csproj --configuration Release
+        run: msbuild GITHUB-CICD.csproj --configuration Release
 
       - name: Publish project
         id: publish
