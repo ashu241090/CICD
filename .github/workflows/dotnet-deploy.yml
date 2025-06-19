@@ -11,7 +11,7 @@ jobs:
 
     env:
       Solution_Name: GITHUB-CICD.sln
-      Project_Path: GITHUB-CICD.csproj
+      Project_Path: ./CICD/GITHUB-CICD.csproj
       Publish_Dir: $(Build.ArtifactStagingDirectory)/publish
 
     steps:
