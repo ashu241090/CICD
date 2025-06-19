@@ -33,8 +33,12 @@ jobs:
             /p:DeployOnBuild=true `
             /p:WebPublishMethod=FileSystem `
             /p:PublishDir="$env:PUBLISH_DIR"
-
+            
+      - name: Show Environment Variable
+        run: echo "Project path:$secrets.DEPLOY_SITE"
+        
       - name: 🚀 Deploy to IIS via Web Deploy
+      
         run: >
           & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
           -verb:sync
