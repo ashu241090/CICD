@@ -1,40 +1,41 @@
-name: Build and Publish ASP.NET (.NET Framework 4.7.2)
+name: Build and Deploy ASP.NET (.NET Framework 4.7.2)
 
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+
+env:
+  PROJECT_PATH: ./CICD/GITHUB-CICD.csproj
+  PUBLISH_DIR: ${{ github.workspace }}/publish
 
 jobs:
-  build:
-    name: Build & Publish
+  build-and-deploy:
     runs-on: windows-latest
 
-    env:
-      Solution_Name: GITHUB-CICD.sln
-      Project_Path: ./CICD/GITHUB-CICD.csproj
-      Publish_Dir: $(Build.ArtifactStagingDirectory)/publish
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3.1
 
-    - name: Restore NuGet packages
-      run: nuget restore ${{ env.GITHUB-CICD }}
+      - name: Restore NuGet packages
+        run: nuget restore GITHUB-CICD.sln
 
-    - name: Build with MSBuild
-      run: |
-        msbuild ${{  env.Project_Path }} `
-          /p:Configuration=Release `
-          /p:TargetFrameworkVersion=v4.7.2 `
-          /p:DeployOnBuild=true `
-          /p:WebPublishMethod=FileSystem `
-          /p:PublishDir="${{ github.workspace }}\publish"
+      - name: Build and Publish project
+        run: |
+          mkdir publish
+          msbuild $env:PROJECT_PATH `
+            /p:Configuration=Release `
+            /p:DeployOnBuild=true `
+            /p:WebPublishMethod=FileSystem `
+            /p:PublishDir="$env:PUBLISH_DIR"
 
-    - name: Upload publish artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: webapp
-        path: ${{ github.workspace }}\publish
+      - name: Deploy to IIS via Web Deploy
+        run: |
+          "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
+          -verb:sync `
+          -source:contentPath="$env:PUBLISH_DIR" `
+          -dest:contentPath="${{ secrets.DEPLOY_SITE }}",computerName="${{ secrets.DEPLOY_URL }}",userName="${{ secrets.DEPLOY_USER }}",password="${{ secrets.DEPLOY_PASSWORD }}",authType="Basic" `
+          -allowUntrusted=true
