@@ -34,11 +34,10 @@ jobs:
             /p:WebPublishMethod=FileSystem `
             /p:PublishDir="$env:PUBLISH_DIR"
 
-      - name: Deploy to IIS via Web Deploy
+      - name: 🚀 Deploy to IIS via Web Deploy
         run: |
-          & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
-              "-verb:sync" `
-             "-source:contentPath='${{ env.PUBLISH_DIR }}'" `
-             "-dest:contentPath="Default Web Site/CICD,computerName=https://172.16.1.233:8172/msdeploy.axd,userName=JINDALSAW\purchaseapp,password=Jsaw@123$,authType=Basic"" 
-             
-
+         & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
+         -verb:sync `
+         -source:contentPath="${{ env.PUBLISH_DIR }}" `
+         -dest:contentPath="'${{ secrets.DEPLOY_SITE }}'",computerName=${{ secrets.DEPLOY_URL }},userName=${{ secrets.DEPLOY_USER }},password=${{ secrets.DEPLOY_PASSWORD }},authType=Basic `
+         -allowUntrusted
