@@ -35,7 +35,9 @@ jobs:
             /p:PublishDir="$env:PUBLISH_DIR"
             
       - name: Show Environment Variable
-        run: echo "Project path:$secrets.DEPLOY_SITE"
+        run: |
+           echo "DEPLOY_SITE: ${{ secrets.DEPLOY_SITE }}"
+           echo "DEPLOY_URL: ${{ secrets.DEPLOY_URL }}"
         
       - name: 🚀 Deploy to IIS via Web Deploy
       
