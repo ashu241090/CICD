@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  PROJECT_PATH: ./CICD/GITHUB-CICD.csproj
+  PROJECT_PATH: ./GITHUB-CICD.csproj
   PUBLISH_DIR: ${{ github.workspace }}/publish
 
 jobs:
