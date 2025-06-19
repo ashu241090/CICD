@@ -26,7 +26,7 @@ jobs:
 
     - name: Build with MSBuild
       run: |
-        msbuild ${{ env.CICD/GITHUB-CICD.csproj }} `
+        msbuild ${{  env.Project_Path }} `
           /p:Configuration=Release `
           /p:TargetFrameworkVersion=v4.7.2 `
           /p:DeployOnBuild=true `
