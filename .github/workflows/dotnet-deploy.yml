@@ -33,6 +33,10 @@ jobs:
             /p:DeployOnBuild=true `
             /p:WebPublishMethod=FileSystem `
             /p:PublishDir="$env:PUBLISH_DIR"
+      - name: 🧪 Print deployment variables
+        run: |
+         echo "Deploy URL: ${{ secrets.DEPLOY_URL }}"
+         echo "Publish Dir: ${{ env.PUBLISH_DIR }}"
 
       - name: 🚀 Deploy to IIS via Web Deploy
         shell: pwsh
