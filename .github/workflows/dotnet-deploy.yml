@@ -38,7 +38,7 @@ jobs:
          echo "Publish Dir: ${{ env.PUBLISH_DIR }}"
 
       - name: 🚀 Deploy to IIS via Web Deploy
-        shell: pwsh
+        shell: bash
         run: |
          & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
          -verb:sync `
