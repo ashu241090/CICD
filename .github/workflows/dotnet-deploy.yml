@@ -37,13 +37,13 @@ jobs:
         run: |
          echo "Deploy URL: ${{ secrets.DEPLOY_URL }}"
          echo "Publish Dir: ${{ env.PUBLISH_DIR }}"
-
+     
       - name: 🚀 Deploy to IIS via Web Deploy
         shell: pwsh
         run: |
          & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
          -verb:sync `
          -source:contentPath='${{ env.PUBLISH_DIR }}' `
-         -dest:contentPath='${{ secrets.DEPLOY_SITE }}',computerName=${{ secrets.DEPLOY_URL }},userName=${{ secrets.DEPLOY_USER }},password=${{ secrets.DEPLOY_PASSWORD }},authType='Basic' 
-         
+         -dest:contentPath='${{ secrets.DEPLOY_SITE }}',computerName=${{ secrets.DEPLOY_URL }},userName=${{ secrets.DEPLOY_USER }},password=${{ secrets.DEPLOY_PASSWORD }},authType='Basic' ` 
+         -allowUntrusted
 
