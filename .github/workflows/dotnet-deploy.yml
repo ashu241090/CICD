@@ -44,6 +44,6 @@ jobs:
          & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
          -verb:sync `
          -source:contentPath='${{ env.PUBLISH_DIR }}' `
-         -dest:contentPath='${{ secrets.DEPLOY_SITE }}',computerName=${{ secrets.DEPLOY_URL }},userName=${{ secrets.DEPLOY_USER }},password=${{ secrets.DEPLOY_PASSWORD }},authType='Basic' ` 
-         -allowUntrusted
+         -dest:contentPath='${{ secrets.DEPLOY_SITE }}',computerName=${{ secrets.DEPLOY_URL }},userName=${{ secrets.DEPLOY_USER }},password=${{ secrets.DEPLOY_PASSWORD }},authType='Basic' 
+         
 
