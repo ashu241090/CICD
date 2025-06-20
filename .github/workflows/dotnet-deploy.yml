@@ -43,6 +43,10 @@ jobs:
          & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
          -verb:sync `
          -source:contentPath='${{ env.PUBLISH_DIR }}' `
-         -dest:contentPath='${{ secrets.DEPLOY_SITE }}',computerName='${{ secrets.DEPLOY_URL }}',userName='${{ secrets.DEPLOY_USER }}',password='${{ secrets.DEPLOY_PASSWORD }}',authType='Basic'`
+         -dest:contentPath='${{ secrets.DEPLOY_SITE }}' `
+         -dest:computerName='${{ secrets.DEPLOY_URL }}' `
+         -dest:userName='${{ secrets.DEPLOY_USER }}' `
+         -dest:password='${{ secrets.DEPLOY_PASSWORD }}' `
+         -dest:authType='Basic' `
          
 
