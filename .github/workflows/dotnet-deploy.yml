@@ -40,7 +40,7 @@ jobs:
      
       - name: 🚀 Deploy to IIS via Web Deploy
         shell: pwsh
-        run: |
+        run: >
          & "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" `
          -verb:sync `
          -source:contentPath='${{ env.PUBLISH_DIR }}' `
